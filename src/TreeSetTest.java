@@ -35,6 +35,7 @@ class TreeSetTest {
         // Test for method java.util.TreeSet()
         assertTrue(new TreeSet().isEmpty(), "Did not construct correct TreeSet");
     }
+
     @Test
     public void test_ConstructorLjava_util_Collection() {
         // Test for method java.util.TreeSet(java.util.Collection)
@@ -95,15 +96,38 @@ class TreeSetTest {
 
     @Test
     void last() {
+        list.clear();
+        ts.clear();
+        for(int i = 0; i < 100; i++){
+            Integer inte = random.nextInt(100);
+            if(!list.contains(inte))
+                list.add(inte);
+        }
+        ts.addAll(list);
+        assertEquals(ts.last() == list.size() - 1, false);
     }
 
     @Test
     void size() {
+        list.clear();
+        ts.clear();
+        for(int i = 0; i < 100; i++){
+            Integer inte = random.nextInt(100);
+            if(!list.contains(inte))
+                list.add(inte);
+        }
+        ts.addAll(list);
+        assertEquals(ts.size() == list.size(), true);
     }
 
     @Test
     void isEmpty() {
+        list.clear();
+        ts.clear();
+        ts.addAll(list);
+        assertTrue(ts.isEmpty(), "Returned false");
     }
+
 
     @Test
     void contains() {
@@ -125,21 +149,6 @@ class TreeSetTest {
         assertEquals(list.size(), 0);
     }
 
-    /**
-     * java.util.TreeSet#iterator()
-
-    public void test_iterator() {
-        // Test for method java.util.Iterator java.util.TreeSet.iterator()
-        TreeSet s = new TreeSet();
-        s.addAll(ts);
-        Iterator i = ts.iterator();
-        Set as = new HashSet(Arrays.asList(objArray));
-        while (i.hasNext())
-            as.remove(i.next());
-        assertEquals("Returned incorrect iterator", 0, as.size());
-    }
-     */
-
 
     @Test
     void toArray() {
@@ -151,10 +160,19 @@ class TreeSetTest {
 
     @Test
     void add() {
+        ts.clear();
+        list.clear();
+        ts.add(5);
+        assertTrue(ts.contains(5), "Failed to add object");
     }
 
     @Test
     void remove() {
+        ts.clear();
+        list.clear();
+        ts.add(15);
+        ts.remove(15);
+        assertTrue(ts.isEmpty(), "Failed to remove object");
     }
 
     @Test
@@ -163,7 +181,6 @@ class TreeSetTest {
 
     @Test
     void addAll() {
-
         TreeSet s = new TreeSet();
         list.clear();
         for(int i = 0; i < 100; i++){
@@ -176,23 +193,7 @@ class TreeSetTest {
         Iterator i = list.iterator();
         while (i.hasNext())
             assertTrue(s.contains(i.next()), "Returned incorrect set");
-
     }
-
-    /**
-     * java.util.TreeSet#addAll(java.util.Collection)
-
-    public void test_addAllLjava_util_Collection() {
-        // Test for method boolean
-        // java.util.TreeSet.addAll(java.util.Collection)
-        TreeSet s = new TreeSet();
-        s.addAll(ts);
-        assertTrue("Incorrect size after add", s.size() == ts.size());
-        Iterator i = ts.iterator();
-        while (i.hasNext())
-            assertTrue("Returned incorrect set", s.contains(i.next()));
-    }
-     */
 
     @Test
     void retainAll() {
@@ -206,6 +207,9 @@ class TreeSetTest {
 
     @Test
     void clear() {
+        ts.clear();
+        list.clear();
+        assertEquals(ts.size(), 0, "Returned non-zero size after clear");
     }
 
 
