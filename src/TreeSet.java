@@ -4,13 +4,32 @@ import java.util.*;
 
 public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     BinarySearchTree<T> bst;
+    Comparator<T> cmp = new entryComparator<T>();
+
+    private class entryComparator<T> implements Comparator<T>{
+        @Override
+        public int compare(T t, T t1) {
+            if(t.equals(t1)){
+                return 0;
+            }
+            return 1;
+        }
+
+    }
 
 
     public TreeSet(){
         this.bst = new BinarySearchTree<>();
     }
 
-    public TreeSet<T>
+    public TreeSet(Collection<T> collection){
+        this.bst = new BinarySearchTree<>();
+        addAll(collection);
+    }
+
+    public TreeSet(Comparator<T> comparator){
+        this.bst = new BinarySearchTree<>();
+    }
 
 
 
