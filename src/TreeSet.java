@@ -96,7 +96,16 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
     @Override
     public <T1> T1[] toArray(T1[] t1s) {
-        return null;
+        Object[] arr1 = toArray();
+
+        if(t1s != null){
+            Object[] arr = new Object[t1s.length];
+            for(int i = 0; i<arr1.length; i++){
+                arr[i] = arr1[i];
+            }
+            return (T1[]) arr;
+        }
+        throw new NullPointerException();
     }
 
     @Override
@@ -161,6 +170,11 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     @Override
     public void clear() {
         bst.clear();
+    }
+
+
+    public String ToString(){
+        return bst.toString();
     }
 
 

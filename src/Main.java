@@ -4,25 +4,45 @@ import java.util.SortedSet;
 
 public class Main {
 
-    public static void main(String[] args){
-        TreeSet<Integer> mts = new TreeSet<>();
-        Random random = new Random();
-        for(int i = 0; i < 20; i++){
-            Integer num = random.nextInt(20);
-            mts.add( num);
-        }
-        mts.toArray();
-        Iterator<Integer> itr = mts.iterator();
-        while(itr.hasNext()){
-            System.out.println(itr.next());
-        }
+    public static void main(String args[])
+    {
 
-        System.out.println("Subset test");
-        SortedSet<Integer> subset = mts.subSet(4, 15);
-        Iterator<Integer> itr2 = subset.iterator();
-        while(itr2.hasNext()){
-            System.out.println(itr2.next());
-        }
+        // Creating an empty set
+        TreeSet<String>
+                set = new TreeSet<String>();
 
+        // Use add() method to
+        // add elements in the set
+        set.add("Geeks");
+        System.out.println(set.toString());
+        set.add("for");
+        set.add("Geeks");
+        set.add("10");
+        set.add("20");
+
+        // prints the set
+        System.out.println("TreeSet 1: "
+                + set.toString());
+
+        // Creating another empty set
+        TreeSet<String>
+                set2 = new TreeSet<String>();
+
+        // Use add() method to
+        // add elements in the set
+        set2.add("Geeks");
+        set2.add("for");
+        set2.add("Geeks");
+        set2.add("10");
+        set2.add("20");
+
+        // prints the set
+        System.out.println("TreeSet 2: "
+                + set2.toString());
+
+        // Check if the set
+        // contains same elements
+        System.out.println("\nDoes set 1 contains set 2: "
+                + set.containsAll(set2));
     }
 }
