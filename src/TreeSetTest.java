@@ -1,3 +1,4 @@
+import com.sun.source.tree.Tree;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -98,7 +99,28 @@ class TreeSetTest {
 
     @Test
     void addAll() {
+        TreeSet s = new TreeSet();
+        s.addAll(ts);
+        assertTrue(s.size() == ts.size(), "Incorrect size after add");
+        Iterator i = ts.iterator();
+        while (i.hasNext())
+            assertTrue(s.contains(i.next()), "Returned incorrect set");
     }
+
+    /**
+     * java.util.TreeSet#addAll(java.util.Collection)
+
+    public void test_addAllLjava_util_Collection() {
+        // Test for method boolean
+        // java.util.TreeSet.addAll(java.util.Collection)
+        TreeSet s = new TreeSet();
+        s.addAll(ts);
+        assertTrue("Incorrect size after add", s.size() == ts.size());
+        Iterator i = ts.iterator();
+        while (i.hasNext())
+            assertTrue("Returned incorrect set", s.contains(i.next()));
+    }
+     */
 
     @Test
     void retainAll() {
