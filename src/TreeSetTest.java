@@ -122,7 +122,7 @@ class TreeSetTest {
         Iterator i = ts.iterator();
         while (i.hasNext())
             list.remove(i.next());
-        assertEquals(list.size()==0, "Returned incorrect iterator");
+        assertEquals(list.size(), 0);
     }
 
     /**
