@@ -112,8 +112,13 @@ class TreeSetTest {
     @Test
     void iterator() {
         list.clear();
+        for(int i = 0; i < 100; i++){
+            Integer inte = random.nextInt(100);
+            if(!list.contains(inte))
+                list.add(inte);
+        }
         ts.clear();
-        list.addAll(ts);
+        ts.addAll(list);
         Iterator i = ts.iterator();
         while (i.hasNext())
             list.remove(i.next());
