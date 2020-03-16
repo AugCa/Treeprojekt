@@ -2,6 +2,8 @@
 // August Carlsson, Auca4478
 
 
+import java.util.ArrayList;
+
 @SuppressWarnings("unused") // Denna rad ska plockas bort. Den finns här
 // tillfälligt för att vi inte ska tro att det är
 // fel i koden. Varningar ska normalt inte döljas på
@@ -80,6 +82,28 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
     public T getData(){
         return data;
     }
+
+    public ArrayList<T> makeList(){
+        ArrayList<T> newList = new ArrayList<T>();
+        if(left != null && right != null) {
+            newList.add(left.data);
+            newList.add(right.data);
+            return mergeList(left.makeList(), right.makeList());
+        }else if(left != null) {
+            newList.add(left.data);
+            return mergeList(newList, left.makeList());
+        }else if(right != null)
+            newList.add(right.data);
+            return mergeList(newList, right.makeList());
+
+    }
+
+    public ArrayList<T> mergeList(ArrayList<T> l1, ArrayList<T> l2){
+        l1.addAll(l2);
+        return l1;
+    }
+
+
 
 
     public String toString() {
