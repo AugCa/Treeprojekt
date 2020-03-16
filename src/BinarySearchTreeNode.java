@@ -3,6 +3,7 @@
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @SuppressWarnings("unused") // Denna rad ska plockas bort. Den finns här
@@ -13,6 +14,8 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 
     private T data;
     private int index;
+    public BinarySearchTreeNode<T> smaller;
+    public BinarySearchTreeNode<T> larger;
     public BinarySearchTreeNode<T> left;
     public BinarySearchTreeNode<T> right;
 
@@ -101,6 +104,13 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
         if (data != null) list.add(data);
         if (left != null) list.addAll(left.getAll());
         if (right != null) list.addAll(right.getAll());
+        return list;
+    }
+    public List<BinarySearchTreeNode<T>> getNodes(){
+        List<BinarySearchTreeNode<T>> list = new ArrayList<>();
+        if (data != null) list.add(this);
+        if (left != null) list.addAll( left.getNodes());
+        if (right != null) list.addAll(right.getNodes());
         return list;
     }
 

@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class BinarySearchTree<T extends Comparable<T>> {
@@ -26,6 +27,17 @@ public class BinarySearchTree<T extends Comparable<T>> {
     public List<T> makeList(){
         List<T> list = root.getAll();
         Collections.sort(list);
+        return list;
+    }
+
+    public List<BinarySearchTreeNode<T>> getNodeList(){
+        List<BinarySearchTreeNode<T>> list = root.getNodes();
+        Collections.sort(list, new Comparator<BinarySearchTreeNode<T>>() {
+            @Override
+            public int compare(BinarySearchTreeNode<T> tBinarySearchTreeNode, BinarySearchTreeNode<T> t1) {
+                return tBinarySearchTreeNode.getData().compareTo(t1.getData());
+            }
+        });
         return list;
     }
 

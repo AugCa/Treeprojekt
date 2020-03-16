@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.*;
 
 
@@ -9,10 +8,12 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     private class entryComparator<T> implements Comparator<T>{
         @Override
         public int compare(T t, T t1) {
-            if(t.equals(t1)){
-                return 0;
+            if(t.hashCode() > t1.hashCode()){
+                return 1;
+            }else if(t.hashCode()<t1.hashCode()){
+                return -1;
             }
-            return 1;
+            return 0;
         }
 
     }
@@ -29,13 +30,14 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
     public TreeSet(Comparator<T> comparator){
         this.bst = new BinarySearchTree<>();
+        cmp = comparator;
     }
 
 
 
     @Override
     public Comparator<? super T> comparator() {
-        return null;
+        return cmp;
     }
 
     @Override
@@ -89,6 +91,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         return bst.getRoot().findMax();
     }
 
+
     @Override
     public int size() {
         return bst.size();
@@ -110,6 +113,12 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     public Iterator<T> iterator() {
         List<T> list = bst.makeList();
         return new TreeSetIterator(list);
+    }
+
+
+    public Iterator<T> descendingIterator(){
+        List<T> list = bst.makeList();
+        return new DescendingIterator(list);
     }
 
 
@@ -137,7 +146,27 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
     @Override
     public boolean add(T t) {
-        return (!contains(t) && bst.add(t));
+        if(!contains(t))
+            if(bst.add(t)) {
+                maintainLinks();
+                return true;
+            }
+        return false;
+
+    }
+
+    public void maintainLinks(){
+        List<BinarySearchTreeNode<T>> list = bst.getNodeList();
+        int size = list.size();
+        for(int i = 0; i < size; i++){
+            if(i < size-1){
+                list.get(i).right = list.get(i+1);
+            }
+            if(i!=0){
+                list.get(i).left = list.get(i-1);
+            }
+
+        }
     }
 
     @Override
@@ -204,6 +233,38 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         return bst.toString();
     }
 
+    private class DescendingIterator implements Iterator<T>{
+        List<T> list;
+        int size;
+        int i;
+
+        public DescendingIterator(List<T> list){
+            this.list = list;
+            this.size = list.size();
+            int i = size();
+        }
+        @Override
+        public boolean hasNext() {
+            if (i == 0) {
+                return false;
+            } else
+                return true;
+
+        }
+
+
+        @Override
+        public T next() {
+            if(i==size){
+                throw new java.util.NoSuchElementException();
+            }else{
+                i--;
+                return list.get(i);
+            }
+        }
+
+    }
+
 
     private class TreeSetIterator implements Iterator<T> {
         List<T> list;
@@ -243,6 +304,80 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     public Object clone(){
         return this;
     }
+
+    public T ceiling(T e){
+        T last = last();
+        if(last == e){
+            return e;
+        }else if(last.compareTo(e)<0){
+            return null;
+        }
+        List<T> list = bst.makeList();
+        for(int i = list.size(); i > 0; i--){
+            if(list.get(i).compareTo(e)< 0){
+                return list.get(i+1);
+            }
+        }
+        return null;
+    }
+
+
+
+    public Set descendingSet(){
+        List<T> list = bst.makeList();
+        Comparator<T> comparator = new Comparator<T>() {
+            @Override
+            public int compare(T t, T t1) {
+                if(t.hashCode() > t1.hashCode()){
+                    return -1;
+                }else if(t.hashCode()<t1.hashCode()){
+                    return 1;
+                }
+                return 0;
+            }
+        };
+        list.sort(comparator);
+        return (Set) list;
+
+    }
+
+    public T floor(T t){
+        List<T> list = bst.makeList();
+        T first = first();
+        if(first.compareTo(t) > 0)
+            return null;
+        if(first.equals(t)){
+            return first;
+        }
+        for(T item : list){
+            if(item.compareTo(t) < 0)
+                return item;
+        }
+        return null;
+    }
+
+    public T higher(T t){
+        T item = ceiling(t);
+        return (t.equals(item)) ? null : item;
+    }
+    public T lower(T t){
+        T item = floor(t);
+        return (t.equals(item)) ? null : item;
+    }
+
+    public T pollFirst(){
+        T first = first();
+        return (remove(first)) ? first: null;
+    }
+
+    public T pollLast(){
+        T last = last();
+        return (remove(last)) ? last : null;
+    }
+
+
+
+
 
 
 }
