@@ -1,16 +1,12 @@
 import com.sun.source.tree.Tree;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
+
 
 class TreeSetTest {
 
@@ -22,26 +18,66 @@ class TreeSetTest {
             return ((Integer) o1).compareTo((Integer) o2) == 0;
         }
     }
-
-    TreeSet ts;
+    TreeSet<Integer> ts = new TreeSet<>();
     Object objArray[] = new Object[1000];
 
     /**
      * java.util.TreeSet#TreeSet()
      */
+    ArrayList<Integer> list = new ArrayList<>();
+    Random random = new Random();
+
+
+
 
     @Test
     public void test_Constructor() {
         // Test for method java.util.TreeSet()
         assertTrue(new TreeSet().isEmpty(), "Did not construct correct TreeSet");
     }
+    @Test
+    public void test_ConstructorLjava_util_Collection() {
+        // Test for method java.util.TreeSet(java.util.Collection)
+
+        list.clear();
+        for(int i = 0; i < 100; i++){
+            Integer inte = random.nextInt(100);
+            if(!list.contains(inte))
+                list.add(inte);
+        }
+        TreeSet myTreeSet = new TreeSet();
+        myTreeSet.addAll(list);
+        assertTrue(myTreeSet.size() == list.size(),
+                "TreeSet incorrect size");
+        for (int counter = 0; counter < list.size(); counter++)
+            assertTrue(myTreeSet
+                                .contains(list.get(counter)), "TreeSet does not contain correct elements");
+    }
+
 
 
     @Test
-    void comparator() {
+    public void test_addLjava_lang_Object() {
+        // Test for method boolean java.util.TreeSet.add(java.lang.Object)
+        ts.add(-8);
+        list.clear();
+
+        assertTrue(ts.contains(new Integer(-8)), "Failed to add Object");
+
+        assertFalse(ts.add(-8));
     }
 
     @Test
+    public void test_clear() {
+        // Test for method void java.util.TreeSet.clear()
+        list.clear();
+        ts.clear();
+        list.add(2);
+        ts.addAll(list);
+        ts.clear();
+        assertEquals( 0, ts.size());
+        assertTrue(!ts.contains(list.get(0)), "Found element in cleared set");
+    }
     void subSet() {
     }
 
@@ -99,12 +135,20 @@ class TreeSetTest {
 
     @Test
     void addAll() {
+
         TreeSet s = new TreeSet();
-        s.addAll(ts);
-        assertTrue(s.size() == ts.size(), "Incorrect size after add");
-        Iterator i = ts.iterator();
+        list.clear();
+        for(int i = 0; i < 100; i++){
+            Integer inte = random.nextInt(100);
+            if(!list.contains(inte))
+                list.add(inte);
+        }
+        s.addAll(list);
+        assertTrue(s.size() == list.size(), "Incorrect size after add");
+        Iterator i = list.iterator();
         while (i.hasNext())
             assertTrue(s.contains(i.next()), "Returned incorrect set");
+
     }
 
     /**
@@ -128,9 +172,13 @@ class TreeSetTest {
 
     @Test
     void removeAll() {
+
     }
+
 
     @Test
     void clear() {
     }
+
+
 }

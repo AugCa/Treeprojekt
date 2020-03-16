@@ -21,6 +21,7 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
     }
 
     public boolean add(T data) {
+
         int comp = this.data.compareTo(data);
         if(comp > 0)
             if(left == null)
@@ -66,6 +67,7 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
     }
 
     public boolean contains(T data) {
+
         int comp = this.data.compareTo(data);
         return (comp == 0) || ((comp > 0) ? (left != null) && left.contains(data) : (right != null) && right.contains(data));
     }

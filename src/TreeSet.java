@@ -3,7 +3,14 @@ import java.util.*;
 
 
 public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
-    BinarySearchTree<T> bst = new BinarySearchTree<T>();
+    BinarySearchTree<T> bst;
+
+
+    public TreeSet(){
+        this.bst = new BinarySearchTree<>();
+    }
+
+    public TreeSet<T>
 
 
 
@@ -76,6 +83,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     @Override
     public boolean contains(Object o) {
         T data = (T) o;
+
         return (bst.contains(data));
     }
 
@@ -110,7 +118,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
     @Override
     public boolean add(T t) {
-        return (!contains(t)) && bst.add(t);
+        return (!contains(t) && bst.add(t));
     }
 
     @Override
@@ -173,7 +181,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     }
 
 
-    public String ToString(){
+    public String toString(){
         return bst.toString();
     }
 
@@ -211,6 +219,10 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
                 return list.get(i-1);
             }
         }
+    }
+
+    public Object clone(){
+        return this;
     }
 
 

@@ -38,6 +38,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
 
     public boolean contains(T data) {
+
         return root == null ? false : root.contains(data);
     }
 
