@@ -3,6 +3,7 @@
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("unused") // Denna rad ska plockas bort. Den finns här
 // tillfälligt för att vi inte ska tro att det är
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 public class BinarySearchTreeNode<T extends Comparable<T>> {
 
     private T data;
+    private int index;
     public BinarySearchTreeNode<T> left;
     public BinarySearchTreeNode<T> right;
 
@@ -83,20 +85,7 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
         return data;
     }
 
-    public ArrayList<T> makeList(){
-        ArrayList<T> newList = new ArrayList<T>();
-        if(left != null && right != null) {
-            newList.add(left.data);
-            newList.add(right.data);
-            return mergeList(left.makeList(), right.makeList());
-        }else if(left != null) {
-            newList.add(left.data);
-            return mergeList(newList, left.makeList());
-        }else if(right != null)
-            newList.add(right.data);
-            return mergeList(newList, right.makeList());
 
-    }
 
     public ArrayList<T> mergeList(ArrayList<T> l1, ArrayList<T> l2){
         l1.addAll(l2);
@@ -105,6 +94,13 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 
 
 
+    public List<T> getAll() {
+        List<T> list = new ArrayList<>();
+        if (data != null) list.add(data);
+        if (left != null) list.addAll(left.getAll());
+        if (right != null) list.addAll(right.getAll());
+        return list;
+    }
 
     public String toString() {
         StringBuilder builder = new StringBuilder("");

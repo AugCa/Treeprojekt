@@ -1,5 +1,6 @@
 import java.util.Iterator;
 import java.util.Random;
+import java.util.SortedSet;
 
 public class Main {
 
@@ -10,9 +11,17 @@ public class Main {
             Integer num = random.nextInt(20);
             mts.add( num);
         }
+        mts.toArray();
         Iterator<Integer> itr = mts.iterator();
-        while(!itr.hasNext()){
+        while(itr.hasNext()){
             System.out.println(itr.next());
+        }
+
+        System.out.println("Subset test");
+        SortedSet<Integer> subset = mts.subSet(4, 15);
+        Iterator<Integer> itr2 = subset.iterator();
+        while(itr2.hasNext()){
+            System.out.println(itr2.next());
         }
 
     }

@@ -1,7 +1,11 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class BinarySearchTree<T extends Comparable<T>> {
 
     private BinarySearchTreeNode<T> root;
+    ArrayList<T> sortedList;
 
     public boolean add(T data) {
         if (root == null) {
@@ -18,6 +22,19 @@ public class BinarySearchTree<T extends Comparable<T>> {
             root = root.remove(data);
         return size() < originalSize;
 
+    }
+    public List<T> makeList(){
+        List<T> list = root.getAll();
+        Collections.sort(list);
+        return list;
+    }
+
+    public ArrayList<T> getSortedList(){
+        return sortedList;
+    }
+
+    public void clearSortedList(){
+        sortedList.clear();
     }
 
     public boolean contains(T data) {
