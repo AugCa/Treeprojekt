@@ -1,4 +1,3 @@
-import org.testng.annotations.Test;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -11,7 +10,6 @@ import java.util.TreeSet;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TreeSetTest {
-    @Test
     public static class ReversedIntegerComparator implements Comparator {
         public int compare(Object o1, Object o2) {
             return -(((Integer) o1).compareTo((Integer) o2));
