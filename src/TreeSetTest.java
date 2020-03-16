@@ -111,7 +111,30 @@ class TreeSetTest {
 
     @Test
     void iterator() {
+        list.clear();
+        ts.clear();
+        list.addAll(ts);
+        Iterator i = ts.iterator();
+        while (i.hasNext())
+            list.remove(i.next());
+        assertEquals(list.size(), "Returned incorrect iterator");
     }
+
+    /**
+     * java.util.TreeSet#iterator()
+
+    public void test_iterator() {
+        // Test for method java.util.Iterator java.util.TreeSet.iterator()
+        TreeSet s = new TreeSet();
+        s.addAll(ts);
+        Iterator i = ts.iterator();
+        Set as = new HashSet(Arrays.asList(objArray));
+        while (i.hasNext())
+            as.remove(i.next());
+        assertEquals("Returned incorrect iterator", 0, as.size());
+    }
+     */
+
 
     @Test
     void toArray() {
