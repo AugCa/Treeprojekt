@@ -3,7 +3,7 @@ import java.util.*;
 
 public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     BinarySearchTree<T> bst;
-    Comparator<T> cmp = new entryComparator<T>();
+    Comparator<T> cmp;
     T head;
     T tail;
 
@@ -23,11 +23,13 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
     public TreeSet(){
         this.bst = new BinarySearchTree<>();
+        this.cmp = (Comparator<T>) comparator();
     }
 
     //Skapar ett treeset med element från collection.
     public TreeSet(Collection<T> collection){
         this.bst = new BinarySearchTree<>();
+        this.cmp = (Comparator<T>) comparator();
         addAll(collection);
     }
 
@@ -67,13 +69,14 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
     @Override
     public SortedSet<T> headSet(T t) {
-        //Ordna alla element i en sorterad lista
-        List<T> list = bst.makeList();
+        //Iterera genom settet, om next() är mindre än t, lägg till i set
         TreeSet<T> ts = new TreeSet<>();
-        for (T value : list) {
-            //om värdet är mindre än t, lägg in i set
-            if (value.compareTo(t) < 0)
-                ts.add(value);
+        Iterator<T> itr = iterator();
+        while(itr.hasNext()){
+            T data = itr.next();
+            if(t.compareTo(data) > 0){
+                ts.add(data);
+            }
         }
         return ts;
 
@@ -235,6 +238,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         boolean hasChanged = false;
         //För varje element i samlingen, lägg till i treeset, dubletter hanteras i add
         for(T e : collection){
+            //Om något av elementet läggs till i samlingen, så har treeset ändrat
             if(add(e))
                 hasChanged = true;
         }
@@ -243,21 +247,18 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
     @Override
     public boolean retainAll(Collection<?> collection) {
-        Iterator<T> itr = iterator();
         boolean hasChanged = false;
-        while(itr.hasNext()){
-            T data = itr.next();
-            if(!collection.contains(data)){
-                remove(data);
+        //för varje objekt i samlingen, om remove på objektet returnerar true så är haschanged true;
+        for(Object item : collection)
+            if(remove(item))
                 hasChanged = true;
-            }
-        }
         return hasChanged;
     }
 
     @Override
     public boolean removeAll(Collection<?> collection) {
         boolean success = false;
+        //Typ samma som RetainAll
         for(Object e : collection){
             if(bst.remove((T) e))
                 success = true;
@@ -267,11 +268,13 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
     @Override
     public void clear() {
+        //Använder binarysearchtree clear
         bst.clear();
     }
 
 
     public String toString(){
+        //Använder binarysearchtree tostring
         return bst.toString();
     }
 
@@ -281,6 +284,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         int i;
 
         public DescendingIterator(BinarySearchTreeNode<T> node){
+            //tailnoden
             this.node = node;
             this.size = size();
             int i = size();
@@ -298,9 +302,11 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         public T next() {
             if(i==size){
                 i--;
+                //sista noden
                 return node.getData();
             }else{
                 i--;
+                //Nästa nod som är mindre
                 node = node.smaller;
                 return node.getData();
             }
@@ -317,6 +323,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
 
         public TreeSetIterator(BinarySearchTreeNode<T> node){
+            //headnoden
             this.node = node;
             this.size = size();
             this.i = 0;
@@ -387,6 +394,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
                 return 0;
             }
         };
+        list.sort(comparator);
 
         return (Set) list;
     }
@@ -410,6 +418,8 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
         }
         return null;
+
+
     }
 
     public T higher(T t){
