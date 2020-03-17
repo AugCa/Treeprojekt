@@ -197,7 +197,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
                 for(int i = 0; i < size; i++){
                     if(data.compareTo(dataList.get(i)) < 0){
                         node.larger = bst.getRoot().getNode(dataList.get(i));
-                        //Eftersom listan redan innehåller noden så är datat för närliggande mindre nod
+                        //Eftersom listan redan innehåller noden så är datat för närliggande mindre nod på index i -2
                         node.smaller = bst.getRoot().getNode(dataList.get(i-2));
                         node.smaller.larger = node;
                         node.larger.smaller = node;
@@ -216,10 +216,12 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
     @Override
     public boolean containsAll(Collection<?> collection) {
+        //Om storleken är mindre än samlingen så är containsall alltid falskt
         if(size() < collection.size()){
             return false;
         }
         Iterator<?> itr = collection.iterator();
+        //Iterera genom samlingen och kolla contains för varje element
         while(itr.hasNext()){
             if(!contains(itr.next())){
                 return false;
@@ -231,6 +233,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     @Override
     public boolean addAll(Collection<? extends T> collection) {
         boolean hasChanged = false;
+        //För varje element i samlingen, lägg till i treeset, dubletter hanteras i add
         for(T e : collection){
             if(add(e))
                 hasChanged = true;
