@@ -526,6 +526,17 @@ class TreeSetTest {
             System.out.println("Exception thrown : " + e);
         }
     }
+    @Test
+    void higher() {
+        TreeSet<Integer> tree = new TreeSet<>();
+        tree.add(10);
+        tree.add(5);
+        tree.add(8);
+        tree.add(1);
+        tree.add(11);
+        tree.add(3);
+        assertTrue(tree.higher(10) == 11);
+    }
 
 
 }
