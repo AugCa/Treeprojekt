@@ -79,7 +79,10 @@ class TreeSetTest {
         assertEquals( 0, ts.size());
         assertTrue(!ts.contains(list.get(0)), "Found element in cleared set");
     }
-    void subSet() {
+
+    @Test
+    void subSet(){
+
     }
 
     @Test
@@ -142,10 +145,14 @@ class TreeSetTest {
                 list.add(inte);
         }
         ts.clear();
+
         ts.addAll(list);
-        Iterator i = ts.iterator();
+        Collections.sort(list);
+        Iterator<Integer> i = ts.iterator();
+        System.out.println(list);
         while (i.hasNext())
             list.remove(i.next());
+        System.out.println(list);
         assertEquals(list.size(), 0);
     }
 

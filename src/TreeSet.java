@@ -111,8 +111,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
     @Override
     public Iterator<T> iterator() {
-        List<T> list = bst.makeList();
-        return new TreeSetIterator(list);
+        return new TreeSetIterator(bst.getRoot().getMinNode());
     }
 
 
@@ -156,16 +155,15 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     }
 
     public void maintainLinks(){
-        List<BinarySearchTreeNode<T>> list = bst.getNodeList();
-        int size = list.size();
+        List<T> dataList = bst.makeList();
+        int size = dataList.size();
+        BinarySearchTreeNode<T> node;
         for(int i = 0; i < size; i++){
-            if(i < size-1){
-                list.get(i).right = list.get(i+1);
-            }
+            node = bst.getRoot().getNode(dataList.get(i));
+            node.larger = (i == size-1) ? null : bst.getRoot().getNode(dataList.get(i+1));
             if(i!=0){
-                list.get(i).left = list.get(i-1);
+                node.smaller = bst.getRoot().getNode(dataList.get(i-1));
             }
-
         }
     }
 
@@ -194,7 +192,6 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         for(T e : collection){
             if(add(e))
                 hasChanged = true;
-
         }
         return hasChanged;
     }
@@ -267,37 +264,43 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
 
     private class TreeSetIterator implements Iterator<T> {
-        List<T> list;
+        BinarySearchTreeNode<T> node;
+        int i;
         int size;
-        int i = 0;
 
 
-        public TreeSetIterator(List<T> list){
-            this.list = list;
-            this.size = list.size();
+
+        public TreeSetIterator(BinarySearchTreeNode<T> node){
+            this.node = node;
+            this.size = size();
+            this.i = 0;
         }
 
 
         @Override
         public boolean hasNext() {
-            if (i == size) {
+            if(i == size -1) {
                 return false;
             } else
                 return true;
-
         }
-
-
 
         @Override
         public T next() {
-
-            if(i==size){
-                throw new java.util.NoSuchElementException();
+            if(node.larger != null){
+                node = node.larger;
             }else{
-                i++;
-                return list.get(i-1);
+                System.out.println();
+                throw new java.util.NoSuchElementException();
             }
+            if(i == 0){
+                i++;
+                return node.smaller.getData();
+            }else if(i == size -1){
+                i++;
+                return node.getData();
+            }
+            return null;
         }
     }
 

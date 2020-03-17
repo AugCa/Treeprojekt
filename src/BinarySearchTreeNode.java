@@ -47,6 +47,18 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
         return (left != null) ? left.getMinNode() : this;
     }
 
+    public BinarySearchTreeNode<T> getNode(T data){
+        int comp = this.data.compareTo(data);
+        if(comp == 0){
+            return this;
+        }else if(comp > 0){
+            return (this.left == null) ? null : left.getNode(data);
+        }else if(comp < 0){
+            return (this.right == null) ? null : right.getNode(data);
+        }
+        return null;
+    }
+
     public T findMax(){
         return (right != null) ? right.findMax() : this.data;
     }
@@ -109,7 +121,7 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
     public List<BinarySearchTreeNode<T>> getNodes(){
         List<BinarySearchTreeNode<T>> list = new ArrayList<>();
         if (data != null) list.add(this);
-        if (left != null) list.addAll( left.getNodes());
+        if (left != null) list.addAll(left.getNodes());
         if (right != null) list.addAll(right.getNodes());
         return list;
     }
