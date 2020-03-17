@@ -1,12 +1,8 @@
 import com.sun.source.tree.Tree;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
-
-
 import java.util.*;
-
 
 class TreeSetTest {
 
@@ -14,7 +10,6 @@ class TreeSetTest {
         public int compare(Object o1, Object o2) {
             return -(((Integer) o1).compareTo((Integer) o2));
         }
-
         public boolean equals(Object o1, Object o2) {
             return ((Integer) o1).compareTo((Integer) o2) == 0;
         }
@@ -23,12 +18,8 @@ class TreeSetTest {
     TreeSet<Integer> ts = new TreeSet<>();
     Object objArray[] = new Object[1000];
 
-    /**
-     * java.util.TreeSet#TreeSet()
-     */
     ArrayList<Integer> list = new ArrayList<>();
     Random random = new Random();
-
 
     @Test
     public void test_Constructor() {
@@ -55,7 +46,6 @@ class TreeSetTest {
                     .contains(list.get(counter)), "TreeSet does not contain correct elements");
     }
 
-
     @Test
     public void test_addLjava_lang_Object() {
         // Test for method boolean java.util.TreeSet.add(java.lang.Object)
@@ -81,7 +71,6 @@ class TreeSetTest {
 
     @Test
     void subSet() {
-
     }
 
     @Test
@@ -119,7 +108,7 @@ class TreeSetTest {
             list.add(i);
         }
         ts.addAll(list);
-        Set s = ts.headSet(new Integer(100));
+        Set s = ts.headSet(100);
         assertEquals(100, s.size());
         for (int i = 0; i < 100; i++)
             assertTrue(s.contains(list.get(i)), "Returned incorrect set");
@@ -189,7 +178,6 @@ class TreeSetTest {
         assertTrue(ts.isEmpty(), "Returned false");
     }
 
-
     @Test
     void contains() {
         // Test for method boolean java.util.TreeSet.contains(java.lang.Object)
@@ -204,7 +192,7 @@ class TreeSetTest {
         assertTrue(ts
                 .contains(list.get(list.size() / 2)), "Returned false for valid Object");
         assertTrue(!ts
-                .contains(new Integer(-9)), "Returned true for invalid Object");
+                .contains(-9), "Returned true for invalid Object");
         try {
             ts.contains(new Object());
         } catch (ClassCastException e) {
@@ -267,7 +255,6 @@ class TreeSetTest {
         arr = set.toArray(arr);
         for (int j = 0; j < arr.length; j++)
             System.out.println(arr[j]);
-
     }
 
     @Test
@@ -395,46 +382,38 @@ class TreeSetTest {
     @Test
     void removeAll() {
         try {
-
             // Creating object of TreeSet<Integer>
             TreeSet<Integer>
                     set1 = new TreeSet<Integer>();
-
             // Populating set1
             set1.add(1);
             set1.add(2);
             set1.add(3);
             set1.add(4);
             set1.add(5);
-
             // print set1
             System.out.println("TreeSet before "
                     + "removeAll() operation : "
                     + set1);
-
             // Creating another object of  TreeSet<Integer>
             TreeSet<Integer>
                     set2 = new TreeSet<Integer>();
             set2.add(1);
             set2.add(2);
             set2.add(3);
-
             // print set2
             System.out.println("Collection Elements"
                     + " to be removed : "
                     + set2);
-
             // Removing elements from set
             // specified in set2
             // using removeAll() method
             set1.removeAll(set2);
-
             // print set1
             System.out.println("TreeSet after "
                     + "removeAll() operation : "
                     + set1);
         }
-
         catch (NullPointerException e) {
             System.out.println("Exception thrown : " + e);
         }
@@ -534,7 +513,6 @@ class TreeSetTest {
 
             // Print the TreeSet
             System.out.println("TreeSet: " + treeadd);
-
             // getting ceiling value for 25
             // using ceiling() method
             int value = treeadd.ceiling(25);

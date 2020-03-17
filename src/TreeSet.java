@@ -61,8 +61,6 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         }
         //returnera nya treeset
         return ts;
-
-
     }
 
     @Override
@@ -76,7 +74,6 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
                 ts.add(value);
         }
         return ts;
-
     }
 
     @Override
@@ -89,8 +86,6 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
                 ts.add(value);
         }
         return ts;
-
-
     }
 
     @Override
@@ -113,6 +108,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     }
 
     @Override
+    // Boolean metod som blir sann ifall binära sökträdets storlek är 0, dvs att den är tom
     public boolean isEmpty() {
         return bst.size() == 0;
     }
@@ -173,7 +169,6 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
             return true;
             }
         return false;
-
     }
 
     public void maintainLinks(BinarySearchTreeNode<T> node){
@@ -206,7 +201,6 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
                 }
             }
         }
-
     }
 
     @Override
@@ -223,9 +217,8 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         Iterator<?> itr = collection.iterator();
         //Iterera genom samlingen och kolla contains för varje element
         while(itr.hasNext()){
-            if(!contains(itr.next())){
+            if(!contains(itr.next()))
                 return false;
-            }
         }
         return true;
     }
@@ -270,7 +263,6 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         bst.clear();
     }
 
-
     public String toString(){
         return bst.toString();
     }
@@ -287,11 +279,10 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         }
         @Override
         public boolean hasNext() {
-            if (i == 0) {
+            if (i == 0)
                 return false;
-            } else
+             else
                 return true;
-
         }
 
         @Override
@@ -299,7 +290,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
             if(i==size){
                 i--;
                 return node.getData();
-            }else{
+            } else{
                 i--;
                 node = node.smaller;
                 return node.getData();
