@@ -4,6 +4,8 @@ import java.util.*;
 public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     BinarySearchTree<T> bst;
     Comparator<T> cmp = new entryComparator<T>();
+    T head;
+    T tail;
 
     private class entryComparator<T> implements Comparator<T>{
         @Override
@@ -161,6 +163,9 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
     @Override
     public boolean add(T t) {
+        if(isEmpty()){
+            head = tail = t;
+        }
         //Om värdet inte finns i treeset, lägg till i bst
         if(!contains(t) && bst.add(t)){
             //Om det lyckas, upprätthåll länkarna till nästa mindre och nästa högre nod
@@ -172,19 +177,36 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     }
 
     public void maintainLinks(BinarySearchTreeNode<T> node){
-        //Skapa sorterad lista av treeset
-        List<T> dataList = bst.makeList();
-
-        int size = dataList.size();
-        BinarySearchTreeNode<T> node;
-        for(int i = 0; i < size; i++){
-            //Använd värdet i listan för att identifiera noden, om vi har kommit till slutet av listan är
-            node = bst.getRoot().getNode(dataList.get(i));
-            node.larger = (i == size-1) ? null : bst.getRoot().getNode(dataList.get(i+1));
-            if(i!=0){
-                node.smaller = bst.getRoot().getNode(dataList.get(i-1));
+        int size = size();
+        T data = node.getData();
+        //om nya noden inte var första elementet (root)
+        if(size !=1){
+            //om noden är mindre än huvudnoden blir den nya huvudnoden
+            if(data.compareTo(head) < 0){
+                node.larger = bst.getRoot().getNode(head);
+                node.larger.smaller = node;
+                head = data;
+                //om noden är större än tail noden blir den nya tailnoden
+            }else if(data.compareTo(tail) > 0){
+                node.smaller = bst.getRoot().getNode(tail);
+                node.smaller.larger = node;
+                tail = data;
+            }else{
+                //Iterera listan för att hitta nodens plats
+                List<T> dataList = bst.makeList();
+                for(int i = 0; i < size; i++){
+                    if(data.compareTo(dataList.get(i)) < 0){
+                        node.larger = bst.getRoot().getNode(dataList.get(i));
+                        //Eftersom listan redan innehåller noden så är datat för närliggande mindre nod
+                        node.smaller = bst.getRoot().getNode(dataList.get(i-2));
+                        node.smaller.larger = node;
+                        node.larger.smaller = node;
+                        return;
+                    }
+                }
             }
         }
+
     }
 
     @Override
@@ -334,13 +356,14 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
             return null;
         }
         List<T> list = bst.makeList();
-        for(int i = list.size(); i> 0; i--){
+        int j = 0;
+        for(int i = list.size() -1; i> 0; i--){
             if(list.get(i).compareTo(t) >0)
                 j = i;
             while(list.get(j).compareTo(t) >0){
-                j++;
+                j--;
             }
-            return list.get(j-1);
+            return list.get(j+1);
 
         }
         return null;
