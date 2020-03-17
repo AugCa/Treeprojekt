@@ -231,13 +231,13 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     }
 
     private class DescendingIterator implements Iterator<T>{
-        List<T> list;
+        BinarySearchTreeNode<T> node;
         int size;
         int i;
 
-        public DescendingIterator(List<T> list){
-            this.list = list;
-            this.size = list.size();
+        public DescendingIterator(BinarySearchTreeNode<T> node){
+            this.node = node;
+            this.size = size();
             int i = size();
         }
         @Override
@@ -249,14 +249,15 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
         }
 
-
         @Override
         public T next() {
             if(i==size){
-                throw new java.util.NoSuchElementException();
+                i--;
+                return node.getData();
             }else{
                 i--;
-                return list.get(i);
+                node = node.smaller;
+                return node.getData();
             }
         }
 
@@ -279,7 +280,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
         @Override
         public boolean hasNext() {
-            if(i == size -1) {
+            if(i == size ) {
                 return false;
             } else
                 return true;
@@ -287,20 +288,17 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
         @Override
         public T next() {
-            if(node.larger != null){
-                node = node.larger;
-            }else{
-                System.out.println();
-                throw new java.util.NoSuchElementException();
-            }
+
             if(i == 0){
                 i++;
-                return node.smaller.getData();
-            }else if(i == size -1){
+                return node.getData();
+            }else{
                 i++;
+                node = node.larger;
                 return node.getData();
             }
-            return null;
+
+
         }
     }
 

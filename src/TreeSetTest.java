@@ -151,6 +151,7 @@ class TreeSetTest {
         Iterator<Integer> i = ts.iterator();
         System.out.println(list);
         while (i.hasNext())
+
             list.remove(i.next());
         System.out.println(list);
         assertEquals(list.size(), 0);
