@@ -20,7 +20,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
     }
 
-
+    // Instansierar ett nytt binarärt sökträd med en tom konstruktor
     public TreeSet(){
         this.bst = new BinarySearchTree<>();
     }
@@ -37,13 +37,10 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         cmp = comparator;
     }
 
-
-
     @Override
     public Comparator<? super T> comparator() {
         return cmp;
     }
-
 
     @Override
     public SortedSet<T> subSet(T t, T e1) {
@@ -258,6 +255,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         return success;
     }
 
+    // Sätter roten till null och är därav snabbare än exempelvis remove / removeAll
     @Override
     public void clear() {
         bst.clear();
@@ -299,20 +297,16 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
     }
 
-
     private class TreeSetIterator implements Iterator<T> {
         BinarySearchTreeNode<T> node;
         int i;
         int size;
-
-
 
         public TreeSetIterator(BinarySearchTreeNode<T> node){
             this.node = node;
             this.size = size();
             this.i = 0;
         }
-
 
         @Override
         public boolean hasNext() {
