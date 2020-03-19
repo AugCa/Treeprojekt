@@ -91,13 +91,13 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     @Override
     public T first() {
         //returnera minsta värdet genom att traversera vänster i trädet
-        return bst.getRoot().findMin();
+        return head;
     }
 
     @Override
     public T last() {
         //returnera högsta värdet genom att traversera höger i trädet
-        return bst.getRoot().findMax();
+        return tail;
     }
 
 

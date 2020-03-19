@@ -429,7 +429,7 @@ class TreeSetTest {
         assertEquals(ts.size(), 0, "Returned non-zero size after clear");
     }
 
-    @Test
+   /* @Test
     void descendingSet(){
         try {
 
@@ -468,6 +468,8 @@ class TreeSetTest {
         }
     }
 
+
+    */
     @Test
     void floor(){
         try {
