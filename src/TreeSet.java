@@ -2,12 +2,14 @@ import java.util.*;
 
 
 public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
-    BinarySearchTree<T> bst;
-    Comparator<T> cmp;
-    T head;
-    T tail;
+    private BinarySearchTree<T> bst;
+    private Comparator<T> cmp;
+    private int size;
+    private T head;
+    private T tail;
+    private BinarySearchTreeNode<T> prev;
 
-    private class entryComparator<T> implements Comparator<T>{
+    private class EntryComparator<T> implements Comparator<T>{
         @Override
         public int compare(T t, T t1) {
             if(t.hashCode() > t1.hashCode()){
@@ -23,21 +25,26 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     // Instansierar ett nytt binarärt sökträd med en tom konstruktor
     public TreeSet(){
         this.bst = new BinarySearchTree<>();
-        this.cmp = (Comparator<T>) comparator();
+        this.cmp = new EntryComparator<>();
+        this.size = 0;
     }
 
     //Skapar ett treeset med element från collection.
     public TreeSet(Collection<T> collection){
         this.bst = new BinarySearchTree<>();
-        this.cmp = (Comparator<T>) comparator();
+        this.cmp = new EntryComparator<>();
+        this.size = 0;
         addAll(collection);
     }
 
     //Skapar ett treeset med en anpassad comparator
     public TreeSet(Comparator<T> comparator){
         this.bst = new BinarySearchTree<>();
+        this.size = 0;
         cmp = comparator;
     }
+
+
 
     @Override
     public Comparator<? super T> comparator() {
@@ -49,54 +56,54 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         //Ordna alla element i en sorterad lista
         List<T> list = bst.makeList();
         //Skapa ett nytt treeset
-        TreeSet<T> ts = new TreeSet<>();
+        TreeSet<T> subset = new TreeSet<>();
         for (T value : list) {
-            //Lägg in element i listan om värdet är inom range för t och e1
+            //Lägg in element i subset om värdet är inom range för t (start) och e1 (slut)
             int cmp = value.compareTo(t);
             int cmp2 = value.compareTo(e1);
             if (cmp >= 0 && cmp2 <= 0) {
-                ts.add(value);
+                subset.add(value);
             }
         }
         //returnera nya treeset
-        return ts;
+        return subset;
     }
 
     @Override
     public SortedSet<T> headSet(T t) {
-        //Iterera genom settet, om next() är mindre än t, lägg till i set
-        TreeSet<T> ts = new TreeSet<>();
+        //Iterera genom settet, om next() är mindre än t, lägg till i headSet
+        TreeSet<T> headSet = new TreeSet<>();
         Iterator<T> itr = iterator();
         while(itr.hasNext()){
             T data = itr.next();
             if(t.compareTo(data) > 0){
-                ts.add(data);
+                headSet.add(data);
             }
         }
-        return ts;
+        return headSet;
     }
 
     @Override
     public SortedSet<T> tailSet(T t) {
         List<T> list = bst.makeList();
-        TreeSet<T> ts = new TreeSet<>();
+        TreeSet<T> tailSet = new TreeSet<>();
         for (T value : list) {
-            //Lägg in i treeset om värdet är större än t
+            //Lägg in i tailSet om värdet är större än t
             if (value.compareTo(t) > 0)
-                ts.add(value);
+                tailSet.add(value);
         }
-        return ts;
+        return tailSet;
     }
 
     @Override
     public T first() {
-        //returnera minsta värdet genom att traversera vänster i trädet
+        //returnera head för att vårt treeset implementerar länkadlista egenskaper, annars vänstraste värdet i trädet (findMin).
         return head;
     }
 
     @Override
     public T last() {
-        //returnera högsta värdet genom att traversera höger i trädet
+        //returnera tail för att vårt treeset implementerar länkadlista egenskaper, annars högraste värdet i trädet (findMax).
         return tail;
     }
 
@@ -104,13 +111,13 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     @Override
     public int size() {
         //returnera trädets storlek
-        return bst.size();
+        return size;
     }
 
     @Override
     // Boolean metod som blir sann ifall binära sökträdets storlek är 0, dvs att den är tom
     public boolean isEmpty() {
-        return bst.size() == 0;
+        return size == 0;
     }
 
     @Override
@@ -159,12 +166,14 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
     @Override
     public boolean add(T t) {
-        if(isEmpty()){
-            head = tail = t;
-        }
+
         //Om värdet inte finns i treeset, lägg till i bst
         if(!contains(t) && bst.add(t)){
             //Om det lyckas, upprätthåll länkarna till nästa mindre och nästa högre nod
+            size++;
+            if(size == 1){
+                head = tail = t;
+            }
             maintainLinks(bst.getRoot().getNode(t));
             return true;
             }
@@ -172,7 +181,6 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     }
 
     public void maintainLinks(BinarySearchTreeNode<T> node){
-        int size = size();
         T data = node.getData();
         //om nya noden inte var första elementet (root)
         if(size !=1){
@@ -187,25 +195,38 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
                 node.smaller.larger = node;
                 tail = data;
             }else{
-                //Iterera listan för att hitta nodens plats
-                List<T> dataList = bst.makeList();
-                for(int i = 0; i < size; i++){
-                    if(data.compareTo(dataList.get(i)) < 0){
-                        node.larger = bst.getRoot().getNode(dataList.get(i));
-                        //Eftersom listan redan innehåller noden så är datat för närliggande mindre nod på index i -2
-                        node.smaller = bst.getRoot().getNode(dataList.get(i-2));
-                        node.smaller.larger = node;
-                        node.larger.smaller = node;
-                        return;
-                    }
-                }
+                //fixLinks fixar länkar för hela trädet så används bara om den nya noden inte var head eller tail
+                fixLinks(bst.getRoot());
             }
+
         }
     }
 
+    public void fixLinks(BinarySearchTreeNode<T> node){
+        if(node == null){
+            return;
+        }
+        //Börjar från vänstraste noden
+        fixLinks(node.left);
+        //Den senaste besökta kommer alltid vara mindre än nuvarande nod och vice versa
+        if(prev!= null){
+            node.smaller = prev;
+            prev.larger = node;
+        }
+        prev = node;
+        //Sedan högra sidan
+        fixLinks(node.right);
+
+    }
+
+
     @Override
     public boolean remove(Object o) {
-        return bst.remove((T) o);
+        if(bst.remove((T) o)){
+            size--;
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -260,6 +281,8 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     @Override
     public void clear() {
         //Använder binarysearchtree clear
+        size = 0;
+        head = tail = null;
         bst.clear();
     }
 
@@ -350,6 +373,13 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         }else if(last.compareTo(t)<0){
             return null;
         }
+        /*BinarySearchTreeNode<T> node = bst.getNode(head);
+        while(t.compareTo(node.getData()) < 0 ){
+            node = node.larger;
+        }
+        return node.getData();
+
+         */
         List<T> list = bst.makeList();
         int j = 0;
         for(int i = list.size() -1; i> 0; i--){
@@ -361,6 +391,8 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
             return list.get(j+1);
 
         }
+
+
         return null;
     }
 
@@ -417,13 +449,11 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     }
 
     public T pollFirst(){
-        T first = first();
-        return (remove(first)) ? first: null;
+        return (remove(head)) ? head: null;
     }
 
     public T pollLast(){
-        T last = last();
-        return (remove(last)) ? last : null;
+        return (remove(tail)) ? tail : null;
     }
 
 

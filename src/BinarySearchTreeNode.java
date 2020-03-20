@@ -122,13 +122,37 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
         if (right != null) list.addAll(right.getAll());
         return list;
     }
-    public List<BinarySearchTreeNode<T>> getNodes(){
-        List<BinarySearchTreeNode<T>> list = new ArrayList<>();
-        if (data != null) list.add(this);
+
+    /*
+    public ArrayList<BinarySearchTreeNode<T>> getNodes(){
+        ArrayList<BinarySearchTreeNode<T>> list = new ArrayList<>();
         if (left != null) list.addAll(left.getNodes());
+        if (data != null) list.add(this);
         if (right != null) list.addAll(right.getNodes());
+
         return list;
     }
+
+     */
+
+   /* public void fixLinks(){
+        if(left != null && right != null){
+            left.fixLinks(this);
+            right.fixLinks(this);
+        }
+        if(left != null){
+            left.fixLinks();
+        }
+        larger = node;
+        if(right != null) right.fixLinks(this);
+        smaller = node;
+        larger = null;
+
+
+
+    }
+
+    */
 
     public String toString() {
         StringBuilder builder = new StringBuilder("");

@@ -213,7 +213,9 @@ class TreeSetTest {
         ts.clear();
         ts.addAll(list);
         Collections.sort(list);
+
         Iterator<Integer> i = ts.iterator();
+
         while (i.hasNext())
             list.remove(i.next());
         assertEquals(list.size(), 0);

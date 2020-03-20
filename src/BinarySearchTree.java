@@ -7,6 +7,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
 
     private BinarySearchTreeNode<T> root;
     ArrayList<T> sortedList;
+    private BinarySearchTreeNode<T> prev;
 
     public boolean add(T data) {
         if (root == null) {
@@ -30,15 +31,10 @@ public class BinarySearchTree<T extends Comparable<T>> {
         return list;
     }
 
-    public List<BinarySearchTreeNode<T>> getNodeList(){
-        List<BinarySearchTreeNode<T>> list = root.getNodes();
-        Collections.sort(list, new Comparator<BinarySearchTreeNode<T>>() {
-            @Override
-            public int compare(BinarySearchTreeNode<T> tBinarySearchTreeNode, BinarySearchTreeNode<T> t1) {
-                return tBinarySearchTreeNode.getData().compareTo(t1.getData());
-            }
-        });
-        return list;
+
+
+    public BinarySearchTreeNode<T> getNode(T data){
+        return getRoot().getNode(data);
     }
 
     public ArrayList<T> getSortedList(){
