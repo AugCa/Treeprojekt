@@ -53,44 +53,52 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
     @Override
     public SortedSet<T> subSet(T t, T e1) {
-        //Ordna alla element i en sorterad lista
-        List<T> list = bst.makeList();
+
         //Skapa ett nytt treeset
         TreeSet<T> subset = new TreeSet<>();
-        for (T value : list) {
-            //Lägg in element i subset om värdet är inom range för t (start) och e1 (slut)
-            int cmp = value.compareTo(t);
-            int cmp2 = value.compareTo(e1);
-            if (cmp >= 0 && cmp2 <= 0) {
-                subset.add(value);
-            }
+        //Identifiera första noden med ceiling()
+        BinarySearchTreeNode<T> node = bst.getNode(ceiling(t));
+        //lägg till nästa större nod tills e1 är större än noden
+        while(e1.compareTo(node.getData()) > 0){
+            subset.add(node.getData());
+            node = node.larger;
         }
-        //returnera nya treeset
+
+        //returnera nya subSet
         return subset;
     }
 
+
+
     @Override
     public SortedSet<T> headSet(T t) {
-        //Iterera genom settet, om next() är mindre än t, lägg till i headSet
+
+
         TreeSet<T> headSet = new TreeSet<>();
+        //Om t är >= första värdet i treeset så finns det inga mindre värden i treeset.
+        if(first().compareTo(t) >= 0){
+            return headSet;
+        }
+        //Etablera högsta värdet med ceiling()
+        T max = ceiling(t);
+        //Iterera genom settet tillsa data är mindre än max för att undvika redundant iteration
         Iterator<T> itr = iterator();
-        while(itr.hasNext()){
-            T data = itr.next();
-            if(t.compareTo(data) > 0){
-                headSet.add(data);
-            }
+        T data = itr.next();
+        while(data.compareTo(max) < 0){
+            headSet.add(data);
+            data = itr.next();
         }
         return headSet;
     }
 
     @Override
     public SortedSet<T> tailSet(T t) {
-        List<T> list = bst.makeList();
         TreeSet<T> tailSet = new TreeSet<>();
-        for (T value : list) {
-            //Lägg in i tailSet om värdet är större än t
-            if (value.compareTo(t) > 0)
-                tailSet.add(value);
+        BinarySearchTreeNode<T> node = bst.getNode(ceiling(t));
+        tailSet.add(node.getData());
+        while(node.larger != null){
+            node = node.larger;
+            tailSet.add(node.getData());
         }
         return tailSet;
     }
@@ -144,7 +152,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     public Object[] toArray() {
         //Gör en ordnad lista av elementen och lägg in i en array, returnera arrayen
         List<T> list = bst.makeList();
-        Object[] arr = new Object[list.size()];
+        Object[] arr = new Object[size()];
         list.toArray(arr);
         return arr;
     }
@@ -169,7 +177,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
         //Om värdet inte finns i treeset, lägg till i bst
         if(!contains(t) && bst.add(t)){
-            //Om det lyckas, upprätthåll länkarna till nästa mindre och nästa högre nod
+            //Om det lyckas, upprätthåll länkarna
             size++;
             if(size == 1){
                 head = tail = t;
@@ -195,7 +203,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
                 node.smaller.larger = node;
                 tail = data;
             }else{
-                //fixLinks fixar länkar för hela trädet så används bara om den nya noden inte var head eller tail
+                //fixLinks går igenom hela trädet så används bara om den nya noden inte var head eller tail
                 fixLinks(bst.getRoot());
             }
 
@@ -300,7 +308,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
             //tailnoden
             this.node = node;
             this.size = size();
-            int i = size();
+            this.i = size();
         }
         @Override
         public boolean hasNext() {
@@ -373,79 +381,47 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         }else if(last.compareTo(t)<0){
             return null;
         }
-        /*BinarySearchTreeNode<T> node = bst.getNode(head);
-        while(t.compareTo(node.getData()) < 0 ){
+        //Om t är mindre än sista, traversera genom noderna tills en nods data är större än t, returnera noden
+        BinarySearchTreeNode<T> node = bst.getNode(head);
+        while(t.compareTo(node.getData()) > 0 ){
             node = node.larger;
         }
         return node.getData();
-
-         */
-        List<T> list = bst.makeList();
-        int j = 0;
-        for(int i = list.size() -1; i> 0; i--){
-            if(list.get(i).compareTo(t) >0)
-                j = i;
-            while(list.get(j).compareTo(t) >0){
-                j--;
-            }
-            return list.get(j+1);
-
         }
-
-
-        return null;
-    }
-
-
-
-    public Set descendingSet(){
-        List<T> list = bst.makeList();
-        Comparator<T> comparator = new Comparator<T>() {
-            @Override
-            public int compare(T t, T t1) {
-                if(t.hashCode() > t1.hashCode()){
-                    return -1;
-                }else if(t.hashCode()<t1.hashCode()){
-                    return 1;
-                }
-                return 0;
-            }
-        };
-        list.sort(comparator);
-
-        return (Set) list;
-    }
 
     public T floor(T t){
-        List<T> list = bst.makeList();
         T first = first();
-        if(first.compareTo(t) > 0)
+        if(first.compareTo(t) > 0){
             return null;
-        if(first.equals(t)){
+        }
+        if(first == t)
             return first;
-        }
-        int j = 0;
-        for(int i = 0; i< list.size(); i++){
-            if(list.get(i).compareTo(t) < 0)
-                j = i;
-                while(list.get(j).compareTo(t) < 0){
-                    j++;
-                }
-                return list.get(j-1);
 
-        }
-        return null;
+        BinarySearchTreeNode<T> node = bst.getNode(tail);
+        while(t.compareTo(node.getData()) < 0 )
+            node = node.smaller;
+
+        return node.getData();
 
 
     }
-
+    public Set descendingSet(){
+        List<T> list = bst.makeList();
+        Iterator<T> itr = descendingIterator();
+        while(itr.hasNext()){
+            list.add(itr.next());
+        }
+        return (Set) list;
+    }
     public T higher(T t){
         T item = ceiling(t);
-        return (t.equals(item)) ? null : item;
+        BinarySearchTreeNode<T> node = (t.equals(item)) ? bst.getNode(t).larger : null;
+        return (node == null) ? null : node.getData();
     }
     public T lower(T t){
         T item = floor(t);
-        return (t.equals(item)) ? null : item;
+        BinarySearchTreeNode<T> node = (t.equals(item)) ? bst.getNode(t).smaller : null;
+        return (node == null) ? null : node.getData();
     }
 
     public T pollFirst(){

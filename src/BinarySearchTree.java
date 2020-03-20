@@ -26,9 +26,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
 
     }
     public List<T> makeList(){
-        List<T> list = root.getAll();
-        Collections.sort(list);
-        return list;
+        return root.getAll();
     }
 
 

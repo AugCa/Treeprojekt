@@ -117,8 +117,8 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 
     public List<T> getAll() {
         List<T> list = new ArrayList<>();
-        if (data != null) list.add(data);
         if (left != null) list.addAll(left.getAll());
+        if (data != null) list.add(data);
         if (right != null) list.addAll(right.getAll());
         return list;
     }
