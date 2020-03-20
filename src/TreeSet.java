@@ -406,12 +406,31 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
     }
     public Set descendingSet(){
-        List<T> list = bst.makeList();
+        /*List<T> list = bst.makeList();
         Iterator<T> itr = descendingIterator();
         while(itr.hasNext()){
             list.add(itr.next());
         }
         return (Set) list;
+
+         */
+
+        //Gör en ny comparator omvänd till den vanliga
+        Comparator<T> cmp = new Comparator<T>() {
+            @Override
+            public int compare(T t, T t1) {
+                if(t.hashCode() > t1.hashCode()){
+                    return -1;
+                }else if(t.hashCode() < t1.hashCode()){
+                    return 1;
+                }
+                return 0;
+            }
+        };
+        //skapar ett nytt treeset med den nya comparatorn och lägger in alla element
+        TreeSet<T> ts = new TreeSet(cmp);
+        ts.addAll(this);
+        return ts;
     }
     public T higher(T t){
         T item = ceiling(t);
