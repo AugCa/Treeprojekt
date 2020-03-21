@@ -309,10 +309,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         }
         @Override
         public boolean hasNext() {
-            if (i == 0)
-                return false;
-             else
-                return true;
+            return i != 0;
         }
 
         @Override
@@ -345,15 +342,11 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
         @Override
         public boolean hasNext() {
-            if(i == size ) {
-                return false;
-            } else
-                return true;
+            return i != size;
         }
 
         @Override
         public T next() {
-
             if(i == 0){
                 i++;
                 return node.getData();
