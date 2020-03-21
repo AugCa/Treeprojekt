@@ -52,18 +52,16 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     }
 
     @Override
-    public SortedSet<T> subSet(T t, T e1) {
-
+    public SortedSet<T> subSet(T from, T to) {
         //Skapa ett nytt treeset
         TreeSet<T> subset = new TreeSet<>();
         //Identifiera första noden med ceiling()
-        BinarySearchTreeNode<T> node = bst.getNode(ceiling(t));
-        //lägg till nästa större nod tills e1 är större än noden
-        while(e1.compareTo(node.getData()) > 0){
+        BinarySearchTreeNode<T> node = bst.getNode(ceiling(from));
+        //lägg till nästa större nod tills to är större än noden
+        while(to.compareTo(node.getData()) > 0){
             subset.add(node.getData());
             node = node.larger;
         }
-
         //returnera nya subSet
         return subset;
     }
@@ -72,8 +70,6 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
     @Override
     public SortedSet<T> headSet(T t) {
-
-
         TreeSet<T> headSet = new TreeSet<>();
         //Om t är >= första värdet i treeset så finns det inga mindre värden i treeset.
         if(first().compareTo(t) >= 0){
@@ -81,7 +77,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         }
         //Etablera högsta värdet med ceiling()
         T max = ceiling(t);
-        //Iterera genom settet tillsa data är mindre än max för att undvika redundant iteration
+        //Iterera genom settet tills data är mindre än max för att undvika redundant iteration
         Iterator<T> itr = iterator();
         T data = itr.next();
         while(data.compareTo(max) < 0){
@@ -111,7 +107,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
 
     @Override
     public T last() {
-        //returnera tail för att vårt treeset implementerar länkadlista egenskaper, annars högraste värdet i trädet (findMax).
+        //returnera tail för att vårt treeset implementerar länkadlista egenskaper, annars högraste noden i trädet (findMax).
         return tail;
     }
 
@@ -182,7 +178,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
             if(size == 1){
                 head = tail = t;
             }
-            maintainLinks(bst.getRoot().getNode(t));
+            maintainLinks(bst.getNode(t));
             return true;
             }
         return false;
@@ -204,6 +200,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
                 tail = data;
             }else{
                 //fixLinks går igenom hela trädet så används bara om den nya noden inte var head eller tail
+                prev = null;
                 fixLinks(bst.getRoot());
             }
 
@@ -377,7 +374,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     public T ceiling(T t){
         T last = last();
         if(last == t){
-            return t;
+            return last;
         }else if(last.compareTo(t)<0){
             return null;
         }
