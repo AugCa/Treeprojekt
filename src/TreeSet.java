@@ -45,132 +45,6 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         cmp = comparator;
     }
 
-
-
-    @Override
-    public Comparator<? super T> comparator() {
-        return cmp;
-    }
-
-    @Override
-    public SortedSet<T> subSet(T from, T to) {
-        //Skapa ett nytt treeset
-        TreeSet<T> subset = new TreeSet<>();
-        //Identifiera första noden med ceiling()
-        BinarySearchTreeNode<T> node = bst.getNode(ceiling(from));
-        //lägg till nästa större nod tills to är större än noden
-        while(to.compareTo(node.getData()) > 0){
-            subset.add(node.getData());
-            node = node.larger;
-        }
-        //returnera nya subSet
-        return subset;
-    }
-
-
-
-    @Override
-    public SortedSet<T> headSet(T t) {
-        TreeSet<T> headSet = new TreeSet<>();
-        //Om t är >= första värdet i treeset så finns det inga mindre värden i treeset.
-        if(first().compareTo(t) >= 0){
-            return headSet;
-        }
-        //Etablera högsta värdet med ceiling()
-        T max = ceiling(t);
-        //Iterera genom settet tills data är mindre än max för att undvika redundant iteration
-        Iterator<T> itr = iterator();
-        T data = itr.next();
-        while(data.compareTo(max) < 0){
-            headSet.add(data);
-            data = itr.next();
-        }
-        return headSet;
-    }
-
-    @Override
-    public SortedSet<T> tailSet(T t) {
-        TreeSet<T> tailSet = new TreeSet<>();
-        //Node blir lägsta noden som är högre eller = med t med hjälp av ceiling()
-        BinarySearchTreeNode<T> node = bst.getNode(ceiling(t));
-        tailSet.add(node.getData());
-        //ALla noder vars data är större än start noden kommer vara större än t så alla läggs in i tailSet
-        while(node.larger != null){
-            node = node.larger;
-            tailSet.add(node.getData());
-        }
-        return tailSet;
-    }
-
-    @Override
-    public T first() {
-        //returnera head för att vårt treeset implementerar länkadlista egenskaper, annars vänstraste värdet i trädet (findMin).
-        return head;
-    }
-
-    @Override
-    public T last() {
-        //returnera tail för att vårt treeset implementerar länkadlista egenskaper, annars högraste noden i trädet (findMax).
-        return tail;
-    }
-
-
-    @Override
-    public int size() {
-        //returnera trädets storlek
-        return size;
-    }
-
-    @Override
-    // Boolean metod som blir sann ifall binära sökträdets storlek är 0, dvs att den är tom
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    @Override
-    public boolean contains(Object o) {
-        T data = (T) o;
-        //Kolla om o finns i trädet
-        return (bst.contains(data));
-    }
-
-    @Override
-    public Iterator<T> iterator() {
-        //Skapar en iterator med minsta noden som argument för att iterera genom länkade noder till högsta
-        return new TreeSetIterator(bst.getRoot().getMinNode());
-    }
-
-
-    public Iterator<T> descendingIterator(){
-        //Skapar en iterator med högsta noden som argument för att iterera neråt genom länkade noder till lägsta
-        return new DescendingIterator(bst.getRoot().getMaxNode());
-    }
-
-
-    @Override
-    public Object[] toArray() {
-        //Gör en ordnad lista av elementen och lägg in i en array, returnera arrayen
-        List<T> list = bst.makeList();
-        Object[] arr = new Object[size()];
-        list.toArray(arr);
-        return arr;
-    }
-
-    @Override
-    public <T1> T1[] toArray(T1[] t1s) {
-        //Gör en array av treeset
-        Object[] arr1 = toArray();
-        //Om t1s inte är null, gör en array med längden av t1s, lägg in alla värden på respektive plats
-        if(t1s != null){
-            Object[] arr = new Object[t1s.length];
-            for(int i = 0; i<arr1.length; i++){
-                arr[i] = arr1[i];
-            }
-            return (T1[]) arr;
-        }
-        throw new NullPointerException();
-    }
-
     @Override
     public boolean add(T t) {
 
@@ -183,7 +57,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
             }
             maintainLinks(bst.getNode(t));
             return true;
-            }
+        }
         return false;
     }
 
@@ -224,7 +98,118 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         prev = node;
         //Sedan högra sidan
         fixLinks(node.right);
+    }
 
+
+    @Override
+    public Comparator<? super T> comparator() {
+        return cmp;
+    }
+
+    @Override
+    public SortedSet<T> subSet(T from, T to) {
+        //Skapa ett nytt treeset
+        TreeSet<T> subset = new TreeSet<>();
+        //Identifiera första noden med ceiling()
+        BinarySearchTreeNode<T> node = bst.getNode(ceiling(from));
+        //lägg till nästa större nod tills to är större än noden
+        while(to.compareTo(node.getData()) > 0){
+            subset.add(node.getData());
+            node = node.larger;
+        }
+        //returnera nya subSet
+        return subset;
+    }
+
+
+    @Override
+    public SortedSet<T> headSet(T t) {
+        TreeSet<T> headSet = new TreeSet<>();
+        //Om t är >= första värdet i treeset så finns det inga mindre värden i treeset.
+        if(first().compareTo(t) >= 0){
+            return headSet;
+        }
+        //Etablera högsta värdet med ceiling()
+        T max = ceiling(t);
+        //Iterera genom settet tills data är mindre än max för att undvika redundant iteration
+        Iterator<T> itr = iterator();
+        T data = itr.next();
+        while(data.compareTo(max) < 0){
+            headSet.add(data);
+            data = itr.next();
+        }
+        return headSet;
+    }
+
+    @Override
+    public SortedSet<T> tailSet(T t) {
+        TreeSet<T> tailSet = new TreeSet<>();
+        //Node blir lägsta noden som är högre eller = med t med hjälp av ceiling()
+        BinarySearchTreeNode<T> node = bst.getNode(ceiling(t));
+        tailSet.add(node.getData());
+        //ALla noder vars data är större än start noden kommer vara större än t så alla läggs in i tailSet
+        while(node.larger != null){
+            node = node.larger;
+            tailSet.add(node.getData());
+        }
+        return tailSet;
+    }
+
+    @Override
+    public Object[] toArray() {
+        //Gör en ordnad lista av elementen och lägg in i en array, returnera arrayen
+        List<T> list = bst.makeList();
+        Object[] arr = new Object[size()];
+        list.toArray(arr);
+        return arr;
+    }
+
+    @Override
+    public <T1> T1[] toArray(T1[] t1s) {
+        //Gör en array av treeset
+        Object[] arr1 = toArray();
+        //Om t1s inte är null, gör en array med längden av t1s, lägg in alla värden på respektive plats
+        if(t1s != null){
+            Object[] arr = new Object[t1s.length];
+            for(int i = 0; i<arr1.length; i++){
+                arr[i] = arr1[i];
+            }
+            return (T1[]) arr;
+        }
+        throw new NullPointerException();
+    }
+
+
+    @Override
+    public T first() {
+        //returnera head för att vårt treeset implementerar länkadlista egenskaper, annars vänstraste värdet i trädet (findMin).
+        return head;
+    }
+
+    @Override
+    public T last() {
+        //returnera tail för att vårt treeset implementerar länkadlista egenskaper, annars högraste noden i trädet (findMax).
+        return tail;
+    }
+
+
+    @Override
+    public int size() {
+        //returnera trädets storlek
+        return size;
+    }
+
+    @Override
+    // Boolean metod som blir sann ifall binära sökträdets storlek är 0, dvs att den är tom
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    @Override
+    public boolean contains(Object o) {
+        T data = (T) o;
+        //Kolla om o finns i trädet
+        return (bst.contains(data));
     }
 
 
@@ -235,6 +220,69 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
             return true;
         }
         return false;
+    }
+    public Object clone(){
+        return this;
+    }
+
+
+
+    public T ceiling(T t){
+        T last = last();
+        if(last == t){
+            return last;
+        }else if(last.compareTo(t)<0){
+            return null;
+        }
+        //Om t är mindre än sista, tilldela node första värdet som är högre än t med getHigher(t) på root-noden
+        //som returnerar första noden som håller värdet som är högre eller lika med t genom att traversera höger i trädet
+        BinarySearchTreeNode<T> node = bst.getRoot().getHigher(t);
+        //Detta värdet kan vara högre än ceilingvärdet, om ceilingvärdet finns som sibling till noden då getHigher bara traverserar höger
+        //Därför traverserar vi vänster sålänge nästa mindre värde är större eller lika med t med hjälp av länkad lista.
+        while(t.compareTo(node.smaller.getData()) <= 0 ){
+            node = node.smaller;
+        }
+        return node.getData();
+
+        /*denna implementering gick ungefär 20ms snabbare
+        på att hitta ceiling för 750 med 1500 slumpade värden mellan 1 och 3000
+        än att iterera genom hela listan som en linkedlist
+         */
+    }
+
+    public T floor(T t){
+        T first = first();
+        if(first.compareTo(t) > 0){
+            return null;
+        }
+        if(first == t)
+            return first;
+
+        BinarySearchTreeNode<T> node = bst.getRoot().getLower(t);
+        while(t.compareTo(node.larger.getData()) >= 0 )
+            node = node.larger;
+
+        return node.getData();
+
+
+    }
+    public T higher(T t){
+        T item = ceiling(t);
+        BinarySearchTreeNode<T> node = (t.equals(item)) ? bst.getNode(t).larger : null;
+        return (node == null) ? null : node.getData();
+    }
+    public T lower(T t){
+        T item = floor(t);
+        BinarySearchTreeNode<T> node = (t.equals(item)) ? bst.getNode(t).smaller : null;
+        return (node == null) ? null : node.getData();
+    }
+
+    public T pollFirst(){
+        return (remove(head)) ? head: null;
+    }
+
+    public T pollLast(){
+        return (remove(tail)) ? tail : null;
     }
 
     @Override
@@ -299,6 +347,16 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         return bst.toString();
     }
 
+    @Override
+    public Iterator<T> iterator() {
+        //Skapar en iterator med minsta noden som argument för att iterera genom länkade noder till högsta
+        return new TreeSetIterator(bst.getRoot().getMinNode());
+    }
+    public Iterator<T> descendingIterator(){
+        //Skapar en iterator med högsta noden som argument för att iterera neråt genom länkade noder till lägsta
+        return new DescendingIterator(bst.getRoot().getMaxNode());
+    }
+
     private class DescendingIterator implements Iterator<T>{
         BinarySearchTreeNode<T> node;
         int size;
@@ -330,6 +388,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         }
 
     }
+
 
     private class TreeSetIterator implements Iterator<T> {
         BinarySearchTreeNode<T> node;
@@ -363,59 +422,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         }
     }
 
-    public Object clone(){
-        return this;
-    }
-
-    public T ceiling(T t){
-        T last = last();
-        if(last == t){
-            return last;
-        }else if(last.compareTo(t)<0){
-            return null;
-        }
-        //Om t är mindre än sista, tilldela node första värdet som är högre än t med getHigher(t) på root-noden
-        //som returnerar första noden som håller värdet som är högre eller lika med t genom att traversera höger i trädet
-        BinarySearchTreeNode<T> node = bst.getRoot().getHigher(t);
-        //Detta värdet kan vara högre än ceilingvärdet, om ceilingvärdet finns som sibling till noden då getHigher bara traverserar höger
-        //Därför traverserar vi vänster sålänge nästa mindre värde är större eller lika med t med hjälp av länkad lista.
-        while(t.compareTo(node.smaller.getData()) <= 0 ){
-            node = node.smaller;
-        }
-        return node.getData();
-
-        /*denna implementering gick ungefär 20ms snabbare
-        på att hitta ceiling för 750 med 1500 slumpade värden mellan 1 och 3000
-        än att iterera genom hela listan som en linkedlist
-         */
-        }
-
-    public T floor(T t){
-        T first = first();
-        if(first.compareTo(t) > 0){
-            return null;
-        }
-        if(first == t)
-            return first;
-
-        BinarySearchTreeNode<T> node = bst.getRoot().getLower(t);
-        while(t.compareTo(node.larger.getData()) >= 0 )
-            node = node.larger;
-
-        return node.getData();
-
-
-    }
     public Set descendingSet(){
-        /*List<T> list = bst.makeList();
-        Iterator<T> itr = descendingIterator();
-        while(itr.hasNext()){
-            list.add(itr.next());
-        }
-        return (Set) list;
-
-         */
-
         //Gör en ny comparator omvänd till den vanliga
         Comparator<T> cmp = new Comparator<T>() {
             @Override
@@ -432,24 +439,6 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         TreeSet<T> ts = new TreeSet(cmp);
         ts.addAll(this);
         return ts;
-    }
-    public T higher(T t){
-        T item = ceiling(t);
-        BinarySearchTreeNode<T> node = (t.equals(item)) ? bst.getNode(t).larger : null;
-        return (node == null) ? null : node.getData();
-    }
-    public T lower(T t){
-        T item = floor(t);
-        BinarySearchTreeNode<T> node = (t.equals(item)) ? bst.getNode(t).smaller : null;
-        return (node == null) ? null : node.getData();
-    }
-
-    public T pollFirst(){
-        return (remove(head)) ? head: null;
-    }
-
-    public T pollLast(){
-        return (remove(tail)) ? tail : null;
     }
 
 
