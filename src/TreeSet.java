@@ -42,19 +42,18 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     public TreeSet(Comparator<T> comparator){
         this.bst = new BinarySearchTree<>();
         this.size = 0;
-        cmp = comparator;
+        this.cmp = comparator;
     }
 
     @Override
     public boolean add(T t) {
-
         //Om värdet inte finns i treeset, lägg till i bst
         if(!contains(t) && bst.add(t)){
-            //Om det lyckas, upprätthåll länkarna
             size++;
             if(size == 1){
                 head = tail = t;
             }
+            //Om det lyckas, upprätthåll länkarna
             maintainLinks(bst.getNode(t));
             return true;
         }
@@ -110,7 +109,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     public SortedSet<T> subSet(T from, T to) {
         //Skapa ett nytt treeset
         TreeSet<T> subset = new TreeSet<>();
-        //Identifiera första noden med ceiling()
+        //Identifiera första noden som ska vara med i subsettet med ceiling()
         BinarySearchTreeNode<T> node = bst.getNode(ceiling(from));
         //lägg till nästa större nod tills to är större än noden
         while(to.compareTo(node.getData()) > 0){
@@ -234,7 +233,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         }else if(last.compareTo(t)<0){
             return null;
         }
-        //Om t är mindre än sista, tilldela node första värdet som är högre än t med getHigher(t) på root-noden
+        //Om t är mindre än sista, tilldela node första värdet som är högre eller lika med t med getHigher(t) på root-noden
         //som returnerar första noden som håller värdet som är högre eller lika med t genom att traversera höger i trädet
         BinarySearchTreeNode<T> node = bst.getRoot().getHigher(t);
         //Detta värdet kan vara högre än ceilingvärdet, om ceilingvärdet finns som sibling till noden då getHigher bara traverserar höger
@@ -327,7 +326,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         boolean success = false;
         //Typ samma som RetainAll
         for(Object e : collection){
-            if(bst.remove((T) e))
+            if(remove( e))
                 success = true;
         }
         return success;
