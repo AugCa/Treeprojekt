@@ -9,6 +9,7 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     private T tail;
     private BinarySearchTreeNode<T> prev;
 
+
     private class EntryComparator<T> implements Comparator<T>{
         @Override
         public int compare(T t, T t1) {
@@ -202,8 +203,8 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
                 tail = data;
             }else{
                 //fixLinks går igenom hela trädet så används bara om den nya noden inte var head eller tail
-                prev = null;
                 fixLinks(bst.getRoot());
+                prev = null;
             }
 
         }
@@ -397,9 +398,9 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         if(first == t)
             return first;
 
-        BinarySearchTreeNode<T> node = bst.getNode(tail);
-        while(t.compareTo(node.getData()) < 0 )
-            node = node.smaller;
+        BinarySearchTreeNode<T> node = bst.getRoot().getLower(t);
+        while(t.compareTo(node.larger.getData()) >= 0 )
+            node = node.larger;
 
         return node.getData();
 

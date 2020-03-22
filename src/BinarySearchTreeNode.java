@@ -130,6 +130,13 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
         }
         return (right!=null) ? right.getHigher(data) : null;
     }
+    public BinarySearchTreeNode<T> getLower(T data){
+        int cmp = this.data.compareTo(data);
+        if(cmp <= 0){
+            return this;
+        }
+        return (left!=null) ? left.getLower(data) : null;
+    }
 
     /*
     public ArrayList<BinarySearchTreeNode<T>> getNodes(){
