@@ -543,19 +543,30 @@ class TreeSetTest {
             TreeSet<Integer> treeadd = new TreeSet<Integer>();
 
             // populate the TreeSet
-            treeadd.add(10);
+            /*treeadd.add(10);
             treeadd.add(20);
+            treeadd.add(29);
             treeadd.add(30);
             treeadd.add(40);
+
+             */
+            int test = 0;
+            Random random = new Random();
+            for(int i = 0; i< 1500; i++){
+                Integer num = random.nextInt(3000);
+                treeadd.add(num);
+
+            }
 
             // Print the TreeSet
             System.out.println("TreeSet: " + treeadd);
             // getting ceiling value for 25
             // using ceiling() method
-            int value = treeadd.ceiling(25);
+            test = 750;
+            int value = treeadd.ceiling(test);
 
             // printing  the ceiling value
-            System.out.println("Ceiling value for 25: "
+            System.out.println("Ceiling value for " + test + " is: "
                     + value);
         }
 

@@ -90,8 +90,10 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
     @Override
     public SortedSet<T> tailSet(T t) {
         TreeSet<T> tailSet = new TreeSet<>();
+        //Node blir lägsta noden som är högre eller = med t med hjälp av ceiling()
         BinarySearchTreeNode<T> node = bst.getNode(ceiling(t));
         tailSet.add(node.getData());
+        //ALla noder vars data är större än start noden kommer vara större än t så alla läggs in i tailSet
         while(node.larger != null){
             node = node.larger;
             tailSet.add(node.getData());
@@ -371,12 +373,20 @@ public class TreeSet<T extends Comparable<T>> implements SortedSet<T> {
         }else if(last.compareTo(t)<0){
             return null;
         }
-        //Om t är mindre än sista, traversera genom noderna tills en nods data är större än t, returnera noden
-        BinarySearchTreeNode<T> node = bst.getNode(head);
-        while(t.compareTo(node.getData()) > 0 ){
-            node = node.larger;
+        //Om t är mindre än sista, tilldela node första värdet som är högre än t med getHigher(t) på root-noden
+        //som returnerar första noden som håller värdet som är högre eller lika med t genom att traversera höger i trädet
+        BinarySearchTreeNode<T> node = bst.getRoot().getHigher(t);
+        //Detta värdet kan vara högre än ceilingvärdet, om ceilingvärdet finns som sibling till noden då getHigher bara traverserar höger
+        //Därför traverserar vi vänster sålänge nästa mindre värde är större eller lika med t med hjälp av länkad lista.
+        while(t.compareTo(node.smaller.getData()) <= 0 ){
+            node = node.smaller;
         }
         return node.getData();
+
+        /*denna implementering gick ungefär 20ms snabbare
+        på att hitta ceiling för 750 med 1500 slumpade värden mellan 1 och 3000
+        än att iterera genom hela listan som en linkedlist
+         */
         }
 
     public T floor(T t){
